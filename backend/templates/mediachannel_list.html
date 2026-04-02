@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Mediachannels | NexusMedia{% endblock %}
+{% block page_title %}Mediachannels{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+  <form class="search-bar" method="get" style="flex:1;margin-bottom:0">
+    <input type="text" name="search" value="{{ search }}" placeholder="Search mediachannels...">
+    <select name="status" onchange="this.form.submit()">
+      <option value="">All Platform</option>
+      <option value="website" {% if status_filter == 'website' %}selected{% endif %}>Website</option>
+      <option value="youtube" {% if status_filter == 'youtube' %}selected{% endif %}>YouTube</option>
+      <option value="podcast" {% if status_filter == 'podcast' %}selected{% endif %}>Podcast</option>
+      <option value="newsletter" {% if status_filter == 'newsletter' %}selected{% endif %}>Newsletter</option>
+      <option value="social" {% if status_filter == 'social' %}selected{% endif %}>Social</option>
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm">Search</button>
+  </form>
+  <a href="/mediachannels/create/" class="btn btn-primary">+ New MediaChannel</a>
+</div>
+
+<div class="card">
+  {% if records %}
+  <table>
+    <thead>
+      <tr><th>Name</th><th>Platform</th><th>Subscribers</th><th>Status</th><th>Content Count</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td><a href="/mediachannels/{{ r.pk }}/edit/"><strong>{{ r.name }}</strong></a></td>
+        <td><span class="badge badge-blue">{{ r.get_platform_display }}</span></td>
+        <td>{{ r.subscribers|default:"-" }}</td>
+        <td><span class="badge badge-blue">{{ r.get_status_display }}</span></td>
+        <td>{{ r.content_count|default:"-" }}</td>
+        <td class="actions">
+          <a href="/mediachannels/{{ r.pk }}/edit/" class="btn btn-primary btn-sm">Edit</a>
+          <form method="post" action="/mediachannels/{{ r.pk }}/delete/" style="display:inline" onsubmit="return confirm('Delete?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Del</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">
+    <p>No mediachannels found.</p>
+    <a href="/mediachannels/create/" class="btn btn-primary" style="margin-top:1rem">Create MediaChannel</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
