@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Publishschedules | NexusMedia{% endblock %}
+{% block page_title %}Publishschedules{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+  <form class="search-bar" method="get" style="flex:1;margin-bottom:0">
+    <input type="text" name="search" value="{{ search }}" placeholder="Search publishschedules...">
+    <select name="status" onchange="this.form.submit()">
+      <option value="">All Status</option>
+      <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Scheduled</option>
+      <option value="published" {% if status_filter == 'published' %}selected{% endif %}>Published</option>
+      <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+      <option value="failed" {% if status_filter == 'failed' %}selected{% endif %}>Failed</option>
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm">Search</button>
+  </form>
+  <a href="/publishschedules/create/" class="btn btn-primary">+ New PublishSchedule</a>
+</div>
+
+<div class="card">
+  {% if records %}
+  <table>
+    <thead>
+      <tr><th>Content Title</th><th>Channel Name</th><th>Scheduled Date</th><th>Status</th><th>Published Url</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td><a href="/publishschedules/{{ r.pk }}/edit/"><strong>{{ r.content_title }}</strong></a></td>
+        <td>{{ r.channel_name|default:"-" }}</td>
+        <td style="color:var(--muted)">{{ r.scheduled_date|date:"M d, Y"|default:"-" }}</td>
+        <td><span class="badge badge-blue">{{ r.get_status_display }}</span></td>
+        <td>{{ r.published_url|default:"-" }}</td>
+        <td class="actions">
+          <a href="/publishschedules/{{ r.pk }}/edit/" class="btn btn-primary btn-sm">Edit</a>
+          <form method="post" action="/publishschedules/{{ r.pk }}/delete/" style="display:inline" onsubmit="return confirm('Delete?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Del</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">
+    <p>No publishschedules found.</p>
+    <a href="/publishschedules/create/" class="btn btn-primary" style="margin-top:1rem">Create PublishSchedule</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
