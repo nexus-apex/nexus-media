@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}New{% endif %} MediaChannel | NexusMedia{% endblock %}
+{% block page_title %}{% if editing %}Edit MediaChannel{% else %}New MediaChannel{% endif %}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:750px">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" value="{{ record.name|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Platform</label>
+        <select name="platform">
+          <option value="website" {% if record.platform == 'website' %}selected{% endif %}>Website</option>
+          <option value="youtube" {% if record.platform == 'youtube' %}selected{% endif %}>YouTube</option>
+          <option value="podcast" {% if record.platform == 'podcast' %}selected{% endif %}>Podcast</option>
+          <option value="newsletter" {% if record.platform == 'newsletter' %}selected{% endif %}>Newsletter</option>
+          <option value="social" {% if record.platform == 'social' %}selected{% endif %}>Social</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Subscribers</label>
+        <input type="number" name="subscribers" value="{{ record.subscribers|default:'0' }}">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+          <option value="active" {% if record.status == 'active' %}selected{% endif %}>Active</option>
+          <option value="paused" {% if record.status == 'paused' %}selected{% endif %}>Paused</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Content Count</label>
+        <input type="number" name="content_count" value="{{ record.content_count|default:'0' }}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description">{{ record.description|default:'' }}</textarea>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-top:1rem">
+      <button type="submit" class="btn btn-primary">{% if editing %}Update{% else %}Create{% endif %} MediaChannel</button>
+      <a href="/mediachannels/" class="btn" style="background:var(--border);color:var(--text)">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
