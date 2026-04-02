@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}New{% endif %} PublishSchedule | NexusMedia{% endblock %}
+{% block page_title %}{% if editing %}Edit PublishSchedule{% else %}New PublishSchedule{% endif %}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:750px">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group">
+        <label>Content Title</label>
+        <input type="text" name="content_title" value="{{ record.content_title|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Channel Name</label>
+        <input type="text" name="channel_name" value="{{ record.channel_name|default:'' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Scheduled Date</label>
+        <input type="date" name="scheduled_date" value="{{ record.scheduled_date|date:'Y-m-d'|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+          <option value="scheduled" {% if record.status == 'scheduled' %}selected{% endif %}>Scheduled</option>
+          <option value="published" {% if record.status == 'published' %}selected{% endif %}>Published</option>
+          <option value="cancelled" {% if record.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+          <option value="failed" {% if record.status == 'failed' %}selected{% endif %}>Failed</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Published Url</label>
+        <input type="url" name="published_url" value="{{ record.published_url|default:'' }}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Notes</label>
+      <textarea name="notes">{{ record.notes|default:'' }}</textarea>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-top:1rem">
+      <button type="submit" class="btn btn-primary">{% if editing %}Update{% else %}Create{% endif %} PublishSchedule</button>
+      <a href="/publishschedules/" class="btn" style="background:var(--border);color:var(--text)">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
