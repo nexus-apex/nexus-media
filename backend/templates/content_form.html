@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}New{% endif %} Content | NexusMedia{% endblock %}
+{% block page_title %}{% if editing %}Edit Content{% else %}New Content{% endif %}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:750px">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" name="title" value="{{ record.title|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Content Type</label>
+        <select name="content_type">
+          <option value="article" {% if record.content_type == 'article' %}selected{% endif %}>Article</option>
+          <option value="video" {% if record.content_type == 'video' %}selected{% endif %}>Video</option>
+          <option value="podcast" {% if record.content_type == 'podcast' %}selected{% endif %}>Podcast</option>
+          <option value="infographic" {% if record.content_type == 'infographic' %}selected{% endif %}>Infographic</option>
+          <option value="gallery" {% if record.content_type == 'gallery' %}selected{% endif %}>Gallery</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Author</label>
+        <input type="text" name="author" value="{{ record.author|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+          <option value="draft" {% if record.status == 'draft' %}selected{% endif %}>Draft</option>
+          <option value="review" {% if record.status == 'review' %}selected{% endif %}>Review</option>
+          <option value="published" {% if record.status == 'published' %}selected{% endif %}>Published</option>
+          <option value="archived" {% if record.status == 'archived' %}selected{% endif %}>Archived</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Views</label>
+        <input type="number" name="views" value="{{ record.views|default:'0' }}">
+      </div>
+      <div class="form-group">
+        <label>Published Date</label>
+        <input type="date" name="published_date" value="{{ record.published_date|date:'Y-m-d'|default:'' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Category</label>
+        <input type="text" name="category" value="{{ record.category|default:'' }}">
+      </div>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-top:1rem">
+      <button type="submit" class="btn btn-primary">{% if editing %}Update{% else %}Create{% endif %} Content</button>
+      <a href="/contents/" class="btn" style="background:var(--border);color:var(--text)">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
